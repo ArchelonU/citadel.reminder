@@ -4,7 +4,8 @@ project="citadel.reminder"
 user=$(whoami)
 directory="/opt/$project"
 
-sudo mkdir $directory && sudo chown -R $user:$user $directory
+sudo mkdir $directory
+sudo chown -R $user:$user $directory
 cd $directory/../ && $(git clone https://github.com/ArchelonU/$project.git)
 
 sudo apt update && sudo apt -y install pip python3-venv
