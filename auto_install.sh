@@ -12,11 +12,13 @@ python3 -m venv $directory/venv/
 $directory/venv/bin/pip install --upgrade pip
 $directory/venv/bin/pip install pytz schedule python-dotenv vk_api pyTelegramBotAPI
 
-cat > $directory/.env <<EOF
+if [ ! -e $directory/.env ]; then
+    cat > $directory/.env <<EOF
 VK_BOT_TOKEN = "CHANGE_TO_REAL_VK_TOKEN"
 TIME_ZONE = "Europe/Moscow"
 TG_BOT_TOKEN = "CHANGE_TO_REAL_TG_TOKEN"
 EOF
+fi
 
 if [ ! -e $directory/timetables.json ]; then
     cp $directory/examples/timetables.json $directory/timetables.json
