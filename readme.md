@@ -8,7 +8,7 @@
 Если изменения директории и пользователя делать не планируется, установку можно сделать одной командой:  
 `wget https://raw.githubusercontent.com/ArchelonU/citadel.reminder/refs/heads/master/auto_install.sh | bash`
 
-После чего не забудьте прописать актуальный токен в файле **.env**, сделать это можно с помощью любого текстового редактора. А также при необходимости, поправить расписание секций в файле **timetables.json** (cоблюдая формат данных *json*).
+После чего не забудьте прописать актуальные токены для VK и Telegram в файле **.env**, сделать это можно с помощью любого текстового редактора. А также, при необходимости, поправить расписание секций в файле **timetables.json** (cоблюдая формат данных *json*) и проставить соответствующие идентификаторы чатов.
 
 ---
 ### Ручная установка
@@ -31,14 +31,17 @@
 После чего можно проверить обновления для `pip` в виртуальном окружении:  
 `sudo /opt/citadel.reminder/venv/bin/pip install --upgrade pip`
 
-И уже в виртуальном окружении установить используемые пакеты `pytz`, `schedule`, `vk_api` и `python-dotenv`:  
-`sudo /opt/citadel.reminder/venv/bin/pip install pytz schedule vk_api python-dotenv`
+И уже в виртуальном окружении установить используемые пакеты `pytz`, `schedule`, `python-dotenv`, `vk_api` и `pyTelegramBotAPI`:  
+`sudo /opt/citadel.reminder/venv/bin/pip install pytz schedule python-dotenv vk_api pyTelegramBotAPI`
 
-Для отправки сообщений, необходимо прописать актуальный токен бота в файле `.env` с переменными окружения:  
-`sudo touch /opt/citadel.reminder/.env && echo "VK_BOT_TOKEN = \"token_example_1234567890\"" | sudo tee -a /opt/citadel.reminder/.env`
+Для отправки сообщений в VK, необходимо прописать актуальный токен бота в файле `.env` с переменными окружения:  
+`sudo touch /opt/citadel.reminder/.env && echo "VK_BOT_TOKEN = \"VK_token_example_1234567890\"" | sudo tee -a /opt/citadel.reminder/.env`
 
 Там же можно поменять часовой пояс при необходимости:  
 `echo "TIME_ZONE = \"Europe/Moscow\"" | sudo tee -a /opt/citadel.reminder/.env`
+
+Для отправки сообщений в Telegram:  
+`echo "TG_BOT_TOKEN = \"TG_token_example_1234567890\"" | sudo tee -a /opt/citadel.reminder/.env`
 
 Запуск программы необходимо осуществлять интерпретатором из виртуального окружения с указанием расположения основного файла программы:  
 `sudo /opt/citadel.reminder/venv/bin/python3 /opt/citadel.reminder/main.py`

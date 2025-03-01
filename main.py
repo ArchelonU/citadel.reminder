@@ -6,14 +6,18 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import pytz
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import telebot
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 time_zone = pytz.timezone(os.environ.get("TIME_ZONE"))
 vk_bot_token=os.environ.get("VK_BOT_TOKEN")
+tg_bot_token=os.environ.get("TG_BOT_TOKEN")
 
 vk_bot_session = vk_api.VkApi(token=vk_bot_token)
 vk_bot_api = vk_bot_session.get_api()
+
+tg_bot = telebot.TeleBot(tg_bot_token, parse_mode="MARKDOWN")
 
 def main():
     load_timetables()
@@ -35,7 +39,7 @@ def sequence():
     current_weekday = current_date.isoweekday()
     current_time = current_date.time().strftime("%H:%M")
     duty_section = timetables['sections'][(current_date.isocalendar().week) % len(timetables['sections'])]
-
+    
     monday_notifications()
     duty_notification()
     load_timetables()
@@ -46,6 +50,7 @@ def monday_notifications():
             case "09:00" :
                 message = "На этой неделе дежурит секция:\n" + str(duty_section['icon']) + " " + str(duty_section['name'])
                 send_vk_message(int(timetables['main_vk_chat_id']),message)
+                send_tg_message(int(timetables['main_tg_chat_id']),message)
             case "14:00" :
                 previus_date = current_date - timedelta(days=7)
                 if current_date.month != previus_date.month : # Первый понедельник месяца
@@ -73,6 +78,9 @@ def duty_notification():
 
 def send_vk_message(chat_id, message):
     vk_bot_session.method("messages.send", {"peer_id":chat_id, "message":message,"random_id":0})
+
+def send_tg_message(chat_id, message):
+    tg_bot.send_message(chat_id, message)
 
 if __name__ == '__main__':
     main()
