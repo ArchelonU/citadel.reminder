@@ -20,30 +20,27 @@ vk_bot_api = vk_bot_session.get_api()
 tg_bot = telebot.TeleBot(tg_bot_token, parse_mode="MARKDOWN")
 
 def main():
-    load_timetables()
     sequence() # Требуется для первого запуска без ожидания истечения времени выставленного в модуле schedule.
     schedule.every().minute.do(sequence)
     while True:
         schedule.run_pending()
+
+def sequence():
+    global current_date, current_weekday, current_time, duty_section
+    current_date = datetime.now(time_zone)
+    current_weekday = current_date.isoweekday()
+    current_time = current_date.time().strftime("%H:%M")
+    load_timetables()
+    duty_section = timetables['sections'][(current_date.isocalendar().week) % len(timetables['sections'])]
+    monday_notifications()
+    duty_notification()
 
 def load_timetables():
     global timetables
     with open(os.path.join(os.path.dirname(__file__), 'timetables.json')) as file:
         timetables = json.load(file)
     file.close()
-
-def sequence():
-    global current_date, current_weekday, current_time, duty_section
-
-    current_date = datetime.now(time_zone)
-    current_weekday = current_date.isoweekday()
-    current_time = current_date.time().strftime("%H:%M")
-    duty_section = timetables['sections'][(current_date.isocalendar().week) % len(timetables['sections'])]
     
-    monday_notifications()
-    duty_notification()
-    load_timetables()
-
 def monday_notifications():
     if current_weekday == 1 :
         match current_time:
