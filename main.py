@@ -58,7 +58,7 @@ def monday_notifications():
 def duty_notification():
     for workout in duty_section['workouts']:
         if current_weekday == int(workout['weekday']):
-            if current_time == str(workout['start']):
+            if current_time == str(workout['begin']):
                 message = "Дружественное напоминание о дежурстве 🙌"
                 send_vk_message(duty_section['chat_id'],message)
             if current_time == str(workout['end']):
