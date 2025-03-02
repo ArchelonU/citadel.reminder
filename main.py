@@ -51,9 +51,8 @@ def monday_notifications():
             case "14:00" :
                 previus_date = current_date - timedelta(days=7)
                 if current_date.month != previus_date.month : # Первый понедельник месяца
-                    for section in timetables['sections']:
-                        message = "Напоминание о сдаче взносов. 💰\n\n👹 Казна сама себя не наполнит!"
-                        send_vk_message(section['chat_id'],message)
+                    message = "Напоминание о сдаче взносов. 💰\n\n👹 Казна сама себя не наполнит!"
+                    send_vk_message(int(timetables['main_vk_chat_id'],message)
 
 def duty_notification():
     for workout in duty_section['workouts']:
