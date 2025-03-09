@@ -49,8 +49,14 @@
 Теперь необходимо создать файл с расписанием занятий и идентификаторами чатов. Пример можно найти в директории `/opt/citadel.reminder/examples/timetables.json`, оттуда же его можно и скопировать:  
 `sudo cp /opt/citadel.reminder/examples/timetables.json /opt/citadel.reminder/timetables.json`
 
-В нём необходимо проставить соответствующий порядок секций, время их занятий и идентификаторы чатов секций, в которые будут приходить оповещения. Сделать это можно любым файловым редактором:  
+В нём нужно проставить соответствующий порядок секций, время их занятий и идентификаторы чатов секций, в которые будут приходить оповещения. Сделать это можно любым файловым редактором:  
 `sudo nano /opt/citadel.reminder/timetables.json` или `sudo vim /opt/citadel.reminder/timetables.json`
+
+Также необходимо скопировать файл с фразами, используемый для разнообразия отправляемых сообщений:  
+`sudo cp /opt/citadel.reminder/examples/phrases.json /opt/citadel.reminder/phrases.json`
+
+При желании, его тоже можно отредактировать, добавив или убрав дополнительные фразы:  
+`sudo nano /opt/citadel.reminder/phrases.json` или `sudo vim /opt/citadel.reminder/phrases.json`
 
 Запуск программы необходимо осуществлять интерпретатором из виртуального окружения с указанием расположения основного файла программы:  
 `sudo /opt/citadel.reminder/venv/bin/python3 /opt/citadel.reminder/main.py`
