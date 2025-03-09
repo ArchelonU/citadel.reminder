@@ -1,3 +1,4 @@
 venv/
 /.env
 /timetables.json
+/phrases.json

@@ -7,6 +7,7 @@ import pytz
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import telebot
+import random
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -26,47 +27,67 @@ def main():
         schedule.run_pending()
 
 def sequence():
-    global current_date, current_weekday, current_time, duty_section
+    global timetables, phrases, current_date, current_weekday, current_time, duty_section
     current_date = datetime.now(time_zone)
     current_weekday = current_date.isoweekday()
     current_time = current_date.time().strftime("%H:%M")
-    load_timetables()
+    timetables = load_json('timetables.json')
+    phrases = load_json('phrases.json')
     duty_section = timetables['sections'][(current_date.isocalendar().week) % len(timetables['sections'])]
     monday_notifications()
     duty_notification()
 
-def load_timetables():
-    global timetables
-    with open(os.path.join(os.path.dirname(__file__), 'timetables.json')) as file:
-        timetables = json.load(file)
+def load_json(filename):
+    with open(os.path.join(os.path.dirname(__file__), filename)) as file:
+        _ = json.load(file)
     file.close()
+    return _
     
 def monday_notifications():
     if current_weekday == 1 :
         match current_time:
             case "09:00" :
-                message = "На этой неделе дежурит секция:\n" + str(duty_section['icon']) + " " + str(duty_section['name'])
+                duty_section_icon = str(duty_section['icon'])
+                duty_section_name = str(duty_section['name'])
+                message = "На этой неделе дежурит секция:\n" \
+                          "{0} {1}".format(
+                    duty_section_icon,
+                    duty_section_name
+                )
                 send_vk_message(int(timetables['main_vk_chat_id']),message)
                 send_tg_message(int(timetables['main_tg_chat_id']),message)
             case "14:00" :
                 previus_date = current_date - timedelta(days=7)
                 if current_date.month != previus_date.month : # Первый понедельник месяца
-                    message = "Напоминание о сдаче взносов. 💰\n\n👹 Казна сама себя не наполнит!"
+                    icon = random.choice(phrases['club_fees']['icons'])
+                    punch = random.choice(phrases['club_fees']['punches'])
+                    message = "Напоминание о сборе клубных взносов. {0}\n" \
+                              "\n" \
+                              "👹 {1}".format(
+                        icon,
+                        punch
+                    )
                     send_vk_message(int(timetables['main_vk_chat_id']),message)
 
 def duty_notification():
     for workout in duty_section['workouts']:
         if current_weekday == int(workout['weekday']):
             if current_time == str(workout['begin']):
-                message = "Дружественное напоминание о дежурстве 🙌"
+                icon = random.choice(phrases['duty_start']['icons'])
+                message = "Дружественное напоминание о дежурстве {}".format(icon)
                 send_vk_message(duty_section['chat_id'],message)
-            if current_time == str(workout['end']):
+            elif current_time == str(workout['end']):
+                gratitude = random.choice(phrases['duty_end']['gratitudes'])
+                gratitude_icon = random.choice(phrases['duty_end']['gratitude_icons'])
                 message = "Перед уходом, пожалуйста, убедитесь, что:\n" \
-                            "- Снаряжение убрано по местам\n" \
-                            "- Посуда помыта и убрана в шкаф\n" \
-                            "- Мусорное ведро остаётся пустым\n" \
-                            "\n" \
-                            "Благодарим за вклад в общее дело! 🤝"
+                          "- Снаряжение убрано по местам\n" \
+                          "- Посуда помыта и убрана в шкаф\n" \
+                          "- Мусорное ведро остаётся пустым\n" \
+                          "\n" \
+                          "{0} {1}".format(
+                    gratitude,
+                    gratitude_icon
+                )
                 send_vk_message(duty_section['chat_id'],message)
 
 def send_vk_message(chat_id, message):

@@ -25,6 +25,10 @@ if [ ! -e $directory/timetables.json ]; then
     cp $directory/examples/timetables.json $directory/timetables.json
 fi
 
+if [ ! -e $directory/phrases.json ]; then
+    cp $directory/examples/phrases.json $directory/phrases.json
+fi
+
 sudo apt update && sudo apt -y install supervisor
 sudo cp $directory/examples/supervisor.conf /etc/supervisor/conf.d/$project.conf
 sudo supervisorctl reload
