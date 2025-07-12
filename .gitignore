@@ -2,3 +2,4 @@ venv/
 /.env
 /timetables.json
 /phrases.json
+/logfile.txt

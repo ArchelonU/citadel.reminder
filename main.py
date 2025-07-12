@@ -40,9 +40,7 @@ def sequence():
         for vacation in vacations:
             if int(vacation['begin']) <= int(current_date.isocalendar().week) <= int(vacation['end']) :
                 on_vacation=True
-        print(on_vacation)
     if on_vacation is False:
-        print(str(on_vacation) + " 2")
         monday_notifications()
         duty_notification()
 
@@ -101,9 +99,26 @@ def duty_notification():
 
 def send_vk_message(chat_id, message):
     vk_bot_session.method("messages.send", {"peer_id":chat_id, "message":message,"random_id":0})
+    write_log('logfile.txt', "vk " +chat_id, message)
 
 def send_tg_message(chat_id, message):
     tg_bot.send_message(chat_id, message)
+    write_log('logfile.txt', "tg " + chat_id, message)
+
+def write_log(filename, chat_info, message):
+    try:
+        with open(os.path.join(os.path.dirname(__file__), filename), 'a') as logfile:
+            logfile.write("########################### " +
+                          current_date.strftime("%Y/%m/%d %H:%M") + 
+                          " ###########################" +
+                          '\n' +
+                          chat_info + 
+                          '\n\n' +
+                          message + 
+                          '\n\n')
+        logfile.close()
+    except:
+        print("Ошибка при попытке записи")
 
 if __name__ == '__main__':
     main()
