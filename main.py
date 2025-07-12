@@ -34,8 +34,17 @@ def sequence():
     timetables = load_json('timetables.json')
     phrases = load_json('phrases.json')
     duty_section = timetables['sections'][(current_date.isocalendar().week) % len(timetables['sections'])]
-    monday_notifications()
-    duty_notification()
+    vacations = duty_section['vacations']
+    on_vacation=False
+    if len(vacations) > 0 :
+        for vacation in vacations:
+            if int(vacation['begin']) <= int(current_date.isocalendar().week) <= int(vacation['end']) :
+                on_vacation=True
+        print(on_vacation)
+    if on_vacation is False:
+        print(str(on_vacation) + " 2")
+        monday_notifications()
+        duty_notification()
 
 def load_json(filename):
     with open(os.path.join(os.path.dirname(__file__), filename)) as file:
