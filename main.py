@@ -99,11 +99,11 @@ def duty_notification():
 
 def send_vk_message(chat_id, message):
     vk_bot_session.method("messages.send", {"peer_id":chat_id, "message":message,"random_id":0})
-    write_log('logfile.txt', "vk " +chat_id, message)
+    write_log('logfile.txt', "vk " + str(chat_id), message)
 
 def send_tg_message(chat_id, message):
     tg_bot.send_message(chat_id, message)
-    write_log('logfile.txt', "tg " + chat_id, message)
+    write_log('logfile.txt', "tg " + str(chat_id), message)
 
 def write_log(filename, chat_info, message):
     try:
