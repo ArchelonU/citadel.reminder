@@ -22,6 +22,7 @@ tg_bot = telebot.TeleBot(tg_bot_token, parse_mode="MARKDOWN")
 
 def main():
     sequence() # Требуется для первого запуска без ожидания истечения времени выставленного в модуле schedule.
+    write_log('logfile.txt', "[ Citadel reminder has started. ]", "========================================================================")
     schedule.every().minute.do(sequence)
     while True:
         schedule.run_pending()
