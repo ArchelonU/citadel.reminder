@@ -83,3 +83,14 @@
 
 После этого можно перезагрузить супервизор для подхвата конфигурации:  
 `sudo supervisorctl reload`
+
+---
+### После обновления ОС
+После обновления ОС слетят модули, их потребуется переустановить. Для этого сначала проверить работу `pip`:  
+`sudo /opt/citadel.reminder/venv/bin/python3 -m ensurepip`  
+Затем его обновить:  
+`sudo /opt/citadel.reminder/venv/bin/python3 -m pip install --upgrade pip`  
+И установить необходимые модули:  
+`sudo /opt/citadel.reminder/venv/bin/pip install schedule vk_api pytz dotenv telebot`  
+После чего стоит проверить работу скрипта:  
+`sudo supervisorctl status`
